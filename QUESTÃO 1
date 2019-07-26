@@ -1,0 +1,321 @@
+# Lista-5
+
+''' NOME:Felipe Rodrigues Ribeiro
+    DRE:119052031
+    DISCIPLINA:Tópicos Mat. Aplicação A
+    '''
+MemoriadosAlunos = []
+
+def abrir():
+    l = []
+    with open('Nomes.txt', 'r') as f:
+        for line in f:
+            line = line.strip()
+            if len(line) > 0:
+                sp = list(line.split(','))
+                if len(sp) == 4:
+                    s = Aluno(sp[0],sp[1],sp[2],sp[3])
+                if len(sp) == 9:
+                    s = Aluno(sp[0],sp[1],sp[2],sp[3],sp[4],sp[5],sp[6],sp[7],sp[8])
+    return s
+
+class Aluno:
+    def __init__(self,nome,dre,curso,periodo,frequencia=None,P1=None,P2=None,PF=None,PS=None,MemoriaProv=[],conjunto=[]):
+        MemoriaProv = []
+        conjunto = []
+        self.conjunto = conjunto
+        self.nome = nome
+        MemoriaProv.append(self.nome)
+        self.dre = dre
+        MemoriaProv.append(self.dre)
+        self.curso = curso
+        MemoriaProv.append(self.curso)
+        self.periodo = periodo
+        MemoriaProv.append(self.periodo)
+        self.frequencia = frequencia
+        self.P1 = P1
+        self.P2 = P2
+        self.PF = PF
+        self.PS = PS
+        if frequencia != None:
+            self.frequencia = frequencia
+            MemoriaProv.append(self.frequencia)
+        if P1 != None:
+            self.P1 = P1
+            MemoriaProv.append(self.P1)
+            self.conjunto.append(P1)
+        if P2 != None:
+            self.P2 = P2
+            MemoriaProv.append(self.P2)
+            self.conjunto.append(P2)   
+        if PF != None:
+            self.PF = PF
+            MemoriaProv.append(self.PF)
+            self.conjunto.append(PF)
+        if PS != None:
+            self.PS = PS
+            MemoriaProv.append(self.PS)
+            self.conjunto.append(PS)
+        MemoriaDosAlunos.append(MemoriaProv)
+    def PrintarInfos(self):
+        print("\n")
+        print("Nome: ",self.nome)
+        print("DRE: ",self.dre)
+        print("Curso: ",self.curso)
+        print("Periodo: ",self.periodo)
+        if self.frequencia != None:
+            print("Presença: ",self.frequencia)
+        if self.P1 != None: 
+            print("P1: ",self.P1)
+        if self.P2 != None:
+            print("P2: ",self.P2)
+        if self.PF != None:
+            print("PF: ",self.PF)
+        if self.PS != None:
+            print("PS: ",self.PS)
+    def Notas(self,mediap=None,mediaf=None):
+        self.mediap = mediap
+        self.mediaf = mediaf
+        if len(self.conjunto) == 1:
+            print("O aluno só fez uma prova...\nEle reprovou\nMedia foi feita pela divisao de 3 provas")
+            self.mediaf = (conjunto[-1])/3
+        elif self.P1 == None and self.P2 == None:
+            self.mediaf = 0
+            print("Aluno nao fez as duas primeiras provas, ele reprovou com 0")
+        elif self.P1 != None and self.P2 != None:
+            self.mediap = (self.P1 + self.P2)/2
+            if self.mediap >= 7:
+                self.mediaf = self.mediap
+            elif self.mediap < 7 and self.PF != None:
+                self.mediaf = (self.mediap + self.PF)/2
+            elif self.mediap < 7 and self.PF == None and self.PS != None:
+                self.mediaf = (self.mediap + self.PS)/2
+            elif self.mediap < 7 and self.PF == None and self.PS == None:
+                self.mediaf = self.mediap
+        elif self.P1 == None:
+            if self.P2 != None and self.PF != None:
+                self.mediap = (self.P2 + self.PF)/2
+                if self.mediap < 7 and self.PS != None:
+                    self.mediaf = (self.mediap + self.PS)/2
+                elif self.mediap < 7 and self.PS == None:
+                    self.mediaf = (self.mediap)/2
+                elif self.mediap >= 7:
+                    self.mediaf = self.mediap
+            elif self.P2 == None and self.PS != None:
+                self.mediaf = (self.PF + self.PS)/2
+            elif self.PF == None and self.PF != None:
+                self.mediaf = (self.P2 + self.PS)/2
+        elif self.P2 == None:
+            if self.P1 != None and self.PF != None:
+                self.mediap = (self.P1 + self.PF)/2
+                if self.mediap < 7 and self.PS != None:
+                    self.mediaf = (self.mediap + self.PS)/2
+                elif self.mediap < 7 and self.PS == None:
+                    self.mediaf = (self.mediap)/2
+                elif self.mediap >= 7:
+                    self.mediaf = self.mediap
+    def PrintarNotas(self):
+        if self.mediaf != None:
+            if self.mediaf < 5:
+                print("O aluno reprovo e  sua media  foi: ", self.mediaf)
+            elif self.mediaf >= 5:
+                print("O aluno foi aprovado e sua media final foi: ",self.mediaf)
+
+
+def BuscarAluno():
+    print("Buscar o DRE ou o nome do aluno ?")
+    print("Buscar parcialmente?")
+    NoD = input('Busca por nome ou DRE? (escreva nome ou dre) ')
+    if NoD == 'dre':
+        alunosCnome = []
+        T = int(input("Sua busca foi: "))
+        for t in range(len(MemoriaDosAlunos)):
+            alunosCnome.append(MemoriaDosAlunos[t][1])
+        s = []
+        contador = 0
+        for x in alunosCnome:
+            if str(T) in str(x):
+                s.append(MemoriaDosAlunos[contador])
+            contador += 1
+        print(s)
+    if NoD == 'nome':
+        alunosCdre = []
+        T = input("Nome do aluno: ")
+        for t in range(len(MemoriaDosAlunos)):
+            alunosCdre.append(MemoriaDosAlunos[t][0])
+        s = []
+        contador = 0
+        for x in alunosCdre:
+            if T in x:
+                s.append(MemoriaDosAlunos[contador])
+            contador += 1
+        print(s)
+        PrintarA(s)
+
+
+def PrintarAlunos():
+    print("\n+========= Alunos ============================+")
+    print('|    Nome, DRE, Curso, Periodo, Frequencia, notas ')
+    for i in range(len(MemoriaDosAlunos)):
+        N1 = MemoriaDosAlunos[i][0]
+        N2 = MemoriaDosAlunos[i][1]
+        N3 = MemoriaDosAlunos[i][2]
+        N4 = MemoriaDosAlunos[i][3]
+        if len(MemoriaDosAlunos[i]) == 4:
+            print("|",i,".  ",N1,"  ",N2,"  ",N3,"  ",N4)
+        elif len(MemoriaDosAlunos[i]) == 5:
+            N5 = MemoriaDosAlunos[i][4]
+            print("|",i,".  ",N1,"  ",N2,"  ",N3,"  ",N4,"  ",N5)
+        elif len(MemoriaDosAlunos[i]) == 6:
+            N5 = MemoriaDosAlunos[i][4]
+            N6 = MemoriaDosAlunos[i][5]
+            print("|",i,".  ",N1,"  ",N2,"  ",N3,"  ",N4,"  ",N5,"  ",N6)
+        elif len(MemoriaDosAlunos[i]) == 7:
+            N5 = MemoriaDosAlunos[i][4]
+            N6 = MemoriaDosAlunos[i][5]
+            N7 = MemoriaDosAlunos[i][6]
+            print("|",i,".  ",N1,"  ",N2,"  ",N3,"  ",N4,"  ",N5,"  ",N6,"  ",N7)
+        elif len(MemoriaDosAlunos[i]) == 8:
+            N5 = MemoriaDosAlunos[i][4]
+            N6 = MemoriaDosAlunos[i][5]
+            N7 = MemoriaDosAlunos[i][6]
+            N8 = MemoriaDosAlunos[i][7]
+            print("|",i,".  ",N1,"  ",N2,"  ",N3,"  ",N4,"  ",N5,"  ",N6,"  ",N7,"  ",N8)
+        elif len(MemoriaDosAlunos[i]) == 9:
+            N5 = MemoriaDosAlunos[i][4]
+            N6 = MemoriaDosAlunos[i][5]
+            N7 = MemoriaDosAlunos[i][6]
+            N8 = MemoriaDosAlunos[i][7]
+            N9 = MemoriaDosAlunos[i][8]
+            print("|",i+1,".  ",N1,"  ",N2,"  ",N3,"  ",N4,"  ",N5,"  ",N6,"  ",N7,"  ",N8,"  ",N9)
+    print("+===============================================+")
+
+
+def PrintarA(s):
+    print("\n+=================== Alunos ========================+")
+    print('|    Nome, DRE, Curso, Periodo')
+    for i in range(len(s)):
+        N1 = s[i][0]
+        N2 = s[i][1]
+        N3 = s[i][2]
+        N4 = s[i][3]
+        print(i,".  ",N1,"  ",N2,"  ",N3,"  ",N4)
+    print("\n+===================================================+")
+
+def RemoverAluno():
+    PrintarAlunos()
+    esc = int(input("Escolha o aluno que voce quer excluir dos arquivos (contagem começa no 0)"))
+    del MemoriaDosAlunos[esc]
+
+def AlterarAlunos():
+    PrintarAlunos()
+    esc = int(input("Escolha o aluno que voce quer alterar (contagem começa no 0) "))
+    sp = list(MemoriaDosAlunos[esc])
+    #print(len(sp))
+    print("\n"*3,"O que deseja alterar?\n\n1-Nome\n2-DRE\n3-Curso\n4-Periodo\n5-Frequência, P1, P2, PF e PS\n")
+    Op = int(input(":"))
+    if Op == 1:
+        N = input("Novo nome: ")
+        if len(sp) == 4:
+            s = Aluno(N,sp[1],sp[2],sp[3])
+        if len(sp) == 9:
+            s = Aluno(N,sp[1],sp[2],sp[3],sp[4],sp[5],sp[6],sp[7],sp[8])
+    if Op == 2:
+        N = int(input("Novo DRE: "))
+        if len(sp) == 4:
+            s = Aluno(sp[0],N,sp[2],sp[3])
+        if len(sp) == 9:
+            s = Aluno(sp[0],N,sp[2],sp[3],sp[4],sp[5],sp[6],sp[7],sp[8])        
+    if Op == 3:
+        N = input("Novo Curso: ")
+        if len(sp) == 4:
+            s = Aluno(sp[0],sp[1],N,sp[3])
+        if len(sp) == 9:
+            s = Aluno(sp[0],sp[1],N,sp[3],sp[4],sp[5],sp[6],sp[7],sp[8])
+    if Op == 4:
+        N = int(input("Novo periodo: "))
+        if len(sp) == 4:
+            s = Aluno(sp[0],sp[1],sp[2],N)
+        if len(sp) == 9:
+            s = Aluno(sp[0],sp[1],sp[2],N,sp[4],sp[5],sp[6],sp[7],sp[8])
+    if Op == 5: 
+        print("Se o aluno não fez deixe em branco se nao quiser alterar so colocar a mesma nota que ele tirou")
+        try: N0 = int(input("Nova ferequência: "))
+        except: N0 = None
+        try: N1 = int(input("Nova nota da P1: "))
+        except: N1 = None
+        try:N2 = int(input("Nova nota da P2: "))
+        except: N2 = None
+        try:N3 = int(input("Nova nota da PF: "))
+        except: N3 = None
+        try:N4 = int(input("Nova nota da PS: "))
+        except: N4 = None
+        print(sp,N0,N1,N2,N3,N4)
+        s = Aluno(str(sp[0]),int(sp[1]),str(sp[2]),int(sp[3]),N0,N1,N2,N3,N4)
+        s.PrintarInfos()
+    del MemoriaDosAlunos[esc]
+    return s
+In [ ]:
+while True:
+    print('\n+==================== Mini Siga ======================+')
+    print('|                                                     |')
+    print('|1. Adicionar aluno                                   |')
+    print('|2. Consultas aluno                                   |')
+    print('|3. Remover aluno                                     |')
+    print('|4. Alterar informações do aluno                      |')
+    print('|5. Ler de um arquivo                                 |')
+    print('|6. Menu 2 (Opcoes do ex.2)  (ainda nao habilitado)   |')
+    print('|7. Ver Memoria Completa                              |')
+    print('|8. Sair                                              |')
+    print('+=====================================================+\n')
+    Opcao = int(input("Qual e a opção que voce quer? "))
+    if Opcao == 1:
+        Nome = input("Nome do aluno: ")
+        DRE = int(input("DRE: "))
+        Curso = input("Curso: ")
+        Periodo = int(input("Periodo (numérico): "))
+        UE = input("Quer cadastrar a nota e a frequencia do aluno? (s para sim e n para nao)")
+        if UE == 's':
+            try:
+                Presenca = float(input("Presença, digite a percentagem (sem o %) "))
+            except:
+                Presenca = None
+            print("Para separar as casas decimais dos inteiros coloque um ponto '.'")
+            try:
+                P1 = float(input("Nota na P1 (se o aluno nao fez deixe em branco): "))
+            except: 
+                P1 = None
+            try: 
+                P2 = float(input("Nota na P2 (se o aluno nao fez deixe em branco): "))
+            except: 
+                P2 = None
+            try: 
+                PF = float(input("Nota na PF (se o aluno nao fez deixe em branco): "))
+            except:
+                PF = None
+            try: 
+                PS = float(input("Nota na PS (se o aluno nao fez deixe em branco): "))
+            except:
+                PS = None
+            aluno = Aluno(Nome,DRE,Curso,Periodo,Presenca,P1,P2,PF,PS)
+            aluno.PrintarInfos()
+            aluno.Notas()
+            aluno.PrintarNotas()
+        else:
+            aluno = Aluno(Nome,DRE,Curso,Periodo)
+            aluno.PrintarInfos()
+    if Opcao == 2:
+        BuscarAluno()
+    if Opcao == 3:
+        RemoverAluno()
+    if Opcao == 4:
+        AlterarAlunos()
+    if Opcao == 5:
+        abrir()
+    if Opcao == 6:
+        Menu2()
+    if Opcao == 7:
+        PrintarAlunos()
+    if Opcao == 8:
+        print("Você saiu do programa")
+        break
